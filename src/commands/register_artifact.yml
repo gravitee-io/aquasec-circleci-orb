@@ -1,0 +1,45 @@
+description: >
+  This command to register an Artifact in Aqua.
+
+parameters:
+  aqua_url:
+    type: string
+    default: "https://api.eu-1.supply-chain.cloud.aquasec.com"
+    description: "URL depending on the region. Default is for Europe."
+  cspm_url:
+    type: string
+    default: "https://eu-1.api.cloudsploit.com"
+    description: "URL depending on the region where Aqua's Key & Secret are generated. Default is for Europe."
+  billy_server:
+    type: string
+    default: "https://billy.eu-1.codesec.aquasec.com"
+    description: "URL depending on the region. Default is for Europe."
+  built_docker_image_file:
+    type: string
+    default: "./built-docker-images.txt"
+    description: "The file containing the built Docker images."
+  artifact_to_register:
+    type: string
+    default: ""
+    description: "The name of the artifact to register."
+  dry_run:
+    type: boolean
+    default: false
+    description: "Flag used to display the command instead of executing it"
+  debug:
+    type: boolean
+    default: false
+    description: "Flag used to display more information for debugging purposes"
+
+steps:
+  - run:
+      name: Register Artifact
+      environment:
+        AQUA_URL: << parameters.aqua_url >>
+        CSPM_URL: << parameters.cspm_url >>
+        BILLY_SERVER: << parameters.billy_server >>
+        BUILT_DOCKER_IMAGES_FILE: << parameters.built_docker_image_file >>
+        ARTIFACT_TO_REGISTER: << parameters.artifact_to_register >>
+        DRY_RUN: << parameters.dry_run >>
+        DEBUG: << parameters.debug >>
+      command: << include(scripts/register_artifact.sh) >>

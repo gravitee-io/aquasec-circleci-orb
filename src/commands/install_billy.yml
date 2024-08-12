@@ -1,0 +1,16 @@
+description: >
+  This command install Aqua Billy.
+
+parameters:
+  bin_dir:
+    type: string
+    default: "/tmp"
+    description: "The directory where the binary will be installed."
+
+
+steps:
+  - run:
+      environment:
+        BINDIR: << parameters.bin_dir >>
+      name: Install Aqua Billy
+      command: <<include(scripts/install_billy.sh)>>

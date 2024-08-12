@@ -1,0 +1,43 @@
+description: >
+  Register an Artifact in Aqua.
+  https://docs.aquasec.com/saas/supply-chain-security/release-artifacts/add-release-artifacts-mapping/
+
+  By providing a DOCKER_IMAGES environment variable, containing a coma-separated list of Docker image,  the job will
+  register all images in Aqua.
+
+executor: default
+
+parameters:
+  aqua_url:
+    type: string
+    default: "https://api.eu-1.supply-chain.cloud.aquasec.com"
+    description: "URL depending on the region. Default is for Europe."
+
+  cspm_url:
+    type: string
+    default: "https://eu-1.api.cloudsploit.com"
+    description: "URL depending on the region where Aqua's Key & Secret are generated. Default is for Europe."
+
+  billy_server:
+    type: string
+    default: "https://billy.eu-1.codesec.aquasec.com"
+    description: "URL depending on the region. Default is for Europe."
+
+  built_docker_image_file:
+    type: string
+    default: "./built-docker-images.txt"
+    description: "The file containing the built Docker images."
+
+environment:
+  AQUA_URL: << parameters.aqua_url >>
+  CSPM_URL: << parameters.cspm_url >>
+  BILLY_SERVER: << parameters.billy_server >>
+  BUILT_DOCKER_IMAGES_FILE: << parameters.built_docker_image_file >>
+
+steps:
+  - install_billy
+  - register_artifact:
+      aqua_url: << parameters.aqua_url >>
+      cspm_url: << parameters.cspm_url >>
+      billy_server: << parameters.billy_server >>
+      built_docker_image_file: << parameters.built_docker_image_file >>
