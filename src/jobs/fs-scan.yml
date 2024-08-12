@@ -1,0 +1,54 @@
+description: >
+  Aqua filesystem scan job.
+  https://docs.aquasec.com/saas/supply-chain-security/integrations/code-repository-integrations/ci-integrations/
+
+executor: aqua-scanner
+
+parameters:
+  aqua_url:
+    type: string
+    default: "https://api.eu-1.supply-chain.cloud.aquasec.com"
+    description: "URL depending on the region. Default is for Europe."
+
+  cspm_url:
+    type: string
+    default: "https://eu-1.api.cloudsploit.com"
+    description: "URL depending on the region where Aqua's Key & Secret are generated. Default is for Europe."
+
+  debug:
+    type: boolean
+    default: false
+    description: "Enable debug mode."
+
+  scanners:
+    type: string
+    default: "misconfig,vuln,secret"
+    description: >
+      Comma-separated list of scanners to use.
+      Possible values: misconfig, vuln, secret.
+      Default is 'misconfig,vuln,secret'.
+
+  sast:
+    type: boolean
+    default: false
+    description: "To enable performing Static Application Security Testing (SAST) checks on your application code in the code repositories."
+
+  reachability:
+    type: boolean
+    default: false
+    description: "To enable detecting the reachability of the vulnerabilities in the code repositories."
+
+environment:
+  AQUA_URL: << parameters.aqua_url >>
+  CSPM_URL: << parameters.cspm_url >>
+  DEBUG: << parameters.debug >>
+  SAST: << parameters.sast >>
+  REACHABILITY: << parameters.reachability >>
+  TRIVY_RUN_AS_PLUGIN: aqua
+
+steps:
+  - checkout
+  - attach_workspace:
+      at: .
+  - run: |
+      trivy fs --scanners << parameters.scanners >> .
