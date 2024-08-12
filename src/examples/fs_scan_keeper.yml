@@ -1,0 +1,21 @@
+description: >
+  Example to run job with secret kept in Keeper.
+usage:
+  version: 2.1
+  orbs:
+    aquasec: gravitee-io/aquasec
+  workflows:
+    use-my-orb:
+      jobs:
+        - aquasec/fs_scan:
+            context: a_context
+            pre-steps:
+              - keeper/env-export:
+                  secret-url: keeper://uuid/custom_field/AquaKey
+                  var-name: AQUA_KEY
+              - keeper/env-export:
+                  secret-url: keeper://uuid/custom_field/AquaSecret
+                  var-name: AQUA_SECRET
+              - keeper/env-export:
+                  secret-url: keeper://uuid/custom_field/GithubToken
+                  var-name: GITHUB_TOKEN

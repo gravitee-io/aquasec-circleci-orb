@@ -1,0 +1,11 @@
+description: >
+  Executor running in aquasec/aqua-scanner Docker image.
+docker:
+  - image: 'aquasec/aqua-scanner:<<parameters.tag>>'
+parameters:
+  tag:
+    default: latest
+    description: >
+      Pick a specific aquasec/aqua-scanner image variant:
+      https://hub.docker.com/r/aquasec/aqua-scanner/tags
+    type: string
