@@ -1,0 +1,58 @@
+version: 2.1
+setup: true
+orbs:
+  orb-tools: circleci/orb-tools@12.0
+  shellcheck: circleci/shellcheck@3.1
+
+jobs:
+  commitlint:
+    description: "This job uses CommitLint CLI to validate commits messages, starting from the latest tag."
+    docker:
+      - image: cimg/node:lts
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: "Install and setup CommitLint CLI"
+          command: |
+            npm install --quiet --no-progress @commitlint/cli@19 @commitlint/config-conventional@19
+      - run:
+          name: "Validate commits messages, starting from the latest tag."
+          command: |
+            npx commitlint --from $(git describe --tags --abbrev=0) --to HEAD --verbose
+
+filters: &filters
+  tags:
+    only: /.*/
+
+workflows:
+  lint-pack:
+    jobs:
+      - commitlint:
+          filters: *filters
+      - orb-tools/lint:
+          filters: *filters
+      - orb-tools/pack:
+          filters: *filters
+      - orb-tools/review:
+          filters: *filters
+      - shellcheck/check:
+          filters: *filters
+      - orb-tools/publish:
+          orb_name: gravitee-io/aquasec
+          vcs_type: << pipeline.project.type >>
+          requires:
+            - commitlint
+            - orb-tools/lint
+            - orb-tools/pack
+            - orb-tools/review
+            - shellcheck/check
+          context: keeper-orb-publishing
+          filters: *filters
+      # Triggers the next workflow in the Orb Development Kit.
+      - orb-tools/continue:
+          pipeline_number: << pipeline.number >>
+          vcs_type: << pipeline.project.type >>
+          orb_name: aquasec
+          requires: [orb-tools/lint, orb-tools/pack, orb-tools/review, shellcheck/check]
+          filters: *filters
