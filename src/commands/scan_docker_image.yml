@@ -1,0 +1,31 @@
+description: >
+  This command scans a Docker image with Aqua Scanner.
+
+parameters:
+  scanner_url:
+    type: string
+    default: ""
+    description: "Scanner URL"
+  scanner_token:
+    type: env_var_name
+    default: SCANNER_TOKEN
+    description: "The environment variable containing the scanner token."
+
+  built_docker_image_file:
+    type: string
+    default: "./built-docker-images.txt"
+    description: "The file containing the built Docker images to scan."
+  docker_image_to_scan:
+    type: string
+    default: ""
+    description: "The Docker image to scan."
+
+steps:
+  - run:
+      name: Aqua DockerImage Scan
+      environment:
+        SCANNER_URL: << parameters.scanner_url >>
+        PARAM_SCANNER_TOKEN: << parameters.scanner_token >>
+        BUILT_DOCKER_IMAGES_FILE: << parameters.built_docker_image_file >>
+        DOCKER_IMAGE_TO_SCAN: << parameters.docker_image_to_scan >>
+      command: <<include(scripts/scan_image.sh)>>

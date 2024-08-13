@@ -1,0 +1,20 @@
+description: >
+  This command to pull Aqua Scanner docker image.
+
+parameters:
+  aqua_registry_username:
+    type: env_var_name
+    default: AQUA_USERNAME
+    description: "The environment variable containing the username to login to registry.aquasec.com."
+  aqua_registry_password:
+    type: env_var_name
+    default: AQUA_PASSWORD
+    description: "The environment variable containing the password to login to registry.aquasec.com."
+
+steps:
+  - run:
+      environment:
+        PARAM_AQUA_USERNAME: << parameters.aqua_registry_username >>
+        PARAM_AQUA_PASSWORD: << parameters.aqua_registry_password >>
+      name: Pull Scanner Image
+      command: <<include(scripts/pull_scanner_image.sh)>>

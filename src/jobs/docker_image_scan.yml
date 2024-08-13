@@ -1,0 +1,49 @@
+description: >
+  Aqua Docker image scan job.
+  https://docs.aquasec.com/saas/image-and-function-scanning/scanning-manually-with-cli/scanner-cli-scan-command/scanner-cli-command-syntax/
+
+
+executor: default
+
+parameters:
+  scanner_url:
+    type: string
+    default: ""
+    description: "Scanner URL"
+  scanner_token:
+    type: env_var_name
+    default: SCANNER_TOKEN
+    description: "The environment variable containing the scanner token."
+
+  aqua_registry_username:
+    type: env_var_name
+    default: AQUA_USERNAME
+    description: "The environment variable containing the username to login to registry.aquasec.com."
+  aqua_registry_password:
+    type: env_var_name
+    default: AQUA_PASSWORD
+    description: "The environment variable containing the password to login to registry.aquasec.com."
+
+  built_docker_image_file:
+    type: string
+    default: "./built-docker-images.txt"
+    description: "The file containing the built Docker imagse."
+
+  skip_remote_docker_step:
+    type: boolean
+    default: false
+    description: "Skip the setup_remote_docker step if it was already executed in pre-steps."
+
+steps:
+  - unless:
+      condition: << parameters.skip_remote_docker_step >>
+      steps:
+        - setup_remote_docker:
+            version: default
+  - pull_aqua_scanner_image:
+      aqua_registry_username: << parameters.aqua_registry_username >>
+      aqua_registry_password: << parameters.aqua_registry_password >>
+  - scan_docker_image:
+      scanner_url: << parameters.scanner_url >>
+      scanner_token: << parameters.scanner_token >>
+      built_docker_image_file: << parameters.built_docker_image_file >>
