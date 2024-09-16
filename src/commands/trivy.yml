@@ -1,8 +1,5 @@
 description: >
-  Aqua filesystem scan job.
-  https://docs.aquasec.com/saas/supply-chain-security/integrations/code-repository-integrations/ci-integrations/
-
-executor: aqua_scanner
+  This command install Aqua Billy.
 
 parameters:
   aqua_url:
@@ -40,17 +37,13 @@ parameters:
 
 
 steps:
-  - checkout
-  - attach_workspace:
-      at: .
   - run:
-      name: Aqua Filesystem Scan
       environment:
         AQUA_URL: << parameters.aqua_url >>
         CSPM_URL: << parameters.cspm_url >>
         DEBUG: << parameters.debug >>
         SAST: << parameters.sast >>
         REACHABILITY: << parameters.reachability >>
-        SCANNERS: << parameters.scanners >>
         TRIVY_RUN_AS_PLUGIN: aqua
-      command: << include(scripts/trivy.sh) >>
+      name: Trivy
+      command: <<include(scripts/install_billy.sh)>>
