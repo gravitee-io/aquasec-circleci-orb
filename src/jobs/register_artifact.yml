@@ -28,6 +28,11 @@ parameters:
     default: "./built-docker-images.txt"
     description: "The file containing the built Docker images."
 
+  debug:
+    type: boolean
+    default: false
+    description: "Flag used to display more information for debugging purposes"
+
 environment:
   AQUA_URL: << parameters.aqua_url >>
   CSPM_URL: << parameters.cspm_url >>
@@ -41,3 +46,4 @@ steps:
       cspm_url: << parameters.cspm_url >>
       billy_server: << parameters.billy_server >>
       built_docker_image_file: << parameters.built_docker_image_file >>
+      debug: << parameters.debug >>
