@@ -43,14 +43,10 @@ steps:
   - checkout
   - attach_workspace:
       at: .
-  - run:
-      name: Aqua Filesystem Scan
-      environment:
-        AQUA_URL: << parameters.aqua_url >>
-        CSPM_URL: << parameters.cspm_url >>
-        DEBUG: << parameters.debug >>
-        SAST: << parameters.sast >>
-        REACHABILITY: << parameters.reachability >>
-        SCANNERS: << parameters.scanners >>
-        TRIVY_RUN_AS_PLUGIN: aqua
-      command: << include(scripts/trivy.sh) >>
+  - trivy:
+      aqua_url: << parameters.aqua_url >>
+      cspm_url: << parameters.cspm_url >>
+      debug: << parameters.debug >>
+      sast: << parameters.sast >>
+      reachability: << parameters.reachability >>
+      scanners: << parameters.scanners >>
