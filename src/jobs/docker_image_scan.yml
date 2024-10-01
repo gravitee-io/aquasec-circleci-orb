@@ -27,7 +27,7 @@ parameters:
   built_docker_image_file:
     type: string
     default: "./built-docker-images.txt"
-    description: "The file containing the built Docker imagse."
+    description: "The file containing the built Docker images."
 
   skip_remote_docker_step:
     type: boolean
