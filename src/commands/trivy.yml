@@ -35,6 +35,15 @@ parameters:
     default: false
     description: "To enable detecting the reachability of the vulnerabilities in the code repositories."
 
+  db_repository:
+    type: string
+    default: "public.ecr.aws/aquasecurity/trivy-db:2"
+    description: "The repository to fetch vulnerability database from"
+  java_db_repository:
+    type: string
+    default: "public.ecr.aws/aquasecurity/trivy-java-db:1"
+    description: "The repository to fetch Java vulnerability database from"
+
 
 steps:
   - run:
@@ -47,6 +56,6 @@ steps:
         REACHABILITY: << parameters.reachability >>
         SCANNERS: << parameters.scanners >>
         TRIVY_RUN_AS_PLUGIN: aqua
-        TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
-        TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db:1
+        TRIVY_DB_REPOSITORY: << parameters.db_repository >>
+        TRIVY_JAVA_DB_REPOSITORY: << parameters.java_db_repository >>
       command: << include(scripts/trivy.sh) >>

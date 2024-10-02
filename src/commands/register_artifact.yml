@@ -30,6 +30,14 @@ parameters:
     type: boolean
     default: false
     description: "Flag used to display more information for debugging purposes"
+  db_repository:
+    type: string
+    default: "public.ecr.aws/aquasecurity/trivy-db:2"
+    description: "The repository to fetch vulnerability database from"
+  java_db_repository:
+    type: string
+    default: "public.ecr.aws/aquasecurity/trivy-java-db:1"
+    description: "The repository to fetch Java vulnerability database from"
 
 steps:
   - run:
@@ -42,4 +50,6 @@ steps:
         ARTIFACT_TO_REGISTER: << parameters.artifact_to_register >>
         DRY_RUN: << parameters.dry_run >>
         DEBUG: << parameters.debug >>
+        TRIVY_DB_REPOSITORY: << parameters.db_repository >>
+        TRIVY_JAVA_DB_REPOSITORY: << parameters.java_db_repository >>
       command: << include(scripts/register_artifact.sh) >>
