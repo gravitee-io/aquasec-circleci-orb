@@ -1,6 +1,9 @@
 #!/bin/bash
 
 RegisterArtifact() {
+  # override the build number to the workflow id
+  export CIRCLE_BUILD_NUM=${CIRCLE_WORKFLOW_ID}
+
   if [ -z "$1" ]; then
     echo "No artifact to register."
   else
