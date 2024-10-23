@@ -1,0 +1,68 @@
+description: >
+  Aqua filesystem scan & Artifact registration job.
+
+executor: aqua_scanner
+
+parameters:
+  aqua_url:
+    type: string
+    default: "https://api.eu-1.supply-chain.cloud.aquasec.com"
+    description: "URL depending on the region. Default is for Europe."
+
+  cspm_url:
+    type: string
+    default: "https://eu-1.api.cloudsploit.com"
+    description: "URL depending on the region where Aqua's Key & Secret are generated. Default is for Europe."
+
+  billy_server:
+    type: string
+    default: "https://billy.eu-1.codesec.aquasec.com"
+    description: "URL depending on the region. Default is for Europe."
+
+  built_docker_image_file:
+    type: string
+    default: "./built-docker-images.txt"
+    description: "The file containing the built Docker images."
+
+  debug:
+    type: boolean
+    default: false
+    description: "Enable debug mode."
+
+  scanners:
+    type: string
+    default: "misconfig,vuln,secret"
+    description: >
+      Comma-separated list of scanners to use.
+      Possible values: misconfig, vuln, secret.
+      Default is 'misconfig,vuln,secret'.
+
+  sast:
+    type: boolean
+    default: false
+    description: "To enable performing Static Application Security Testing (SAST) checks on your application code in the code repositories."
+
+  reachability:
+    type: boolean
+    default: false
+    description: "To enable detecting the reachability of the vulnerabilities in the code repositories."
+
+
+steps:
+  - checkout
+  - install_billy
+  - attach_workspace:
+      at: .
+  - trivy:
+      aqua_url: << parameters.aqua_url >>
+      cspm_url: << parameters.cspm_url >>
+      debug: << parameters.debug >>
+      sast: << parameters.sast >>
+      reachability: << parameters.reachability >>
+      scanners: << parameters.scanners >>
+  - register_artifact:
+      aqua_url: << parameters.aqua_url >>
+      cspm_url: << parameters.cspm_url >>
+      billy_server: << parameters.billy_server >>
+      built_docker_image_file: << parameters.built_docker_image_file >>
+      debug: << parameters.debug >>
