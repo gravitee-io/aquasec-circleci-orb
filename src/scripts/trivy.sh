@@ -3,21 +3,18 @@
 OPTIONS=""
 
 if [ "${DEBUG}" == "1" ]; then
-  export
   set -x
 
   OPTIONS="$OPTIONS --debug"
 fi
 
 if [ "${SAST}" == "1" ]; then
-  export
   set -x
 
   OPTIONS="$OPTIONS --sast"
 fi
 
 if [ "${REACHABILITY}" == "1" ]; then
-  export
   set -x
 
   OPTIONS="$OPTIONS --reachability"
