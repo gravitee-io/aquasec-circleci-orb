@@ -5,7 +5,6 @@ RegisterArtifact() {
     echo "No artifact to register."
   else
     if [ "${DEBUG}" == "1" ]; then
-      export
       set -x
 
       # shellcheck disable=SC2086
